@@ -174,5 +174,20 @@ class CronParse(object):
                 break
         # At the end
         return dt
+
+
+    def is_valid_time(self, dt=None):
+        """
+        Given a dt, is now a valid time?
+
+        """
+        if not dt:
+            dt = self.get_time()
+        valid_day = self.validate_day(dt=dt)
+        valid_month = self.validate_dt_part(dt=dt, component='month')
+        valid_hour = self.validate_dt_part(dt=dt, component='hour')
+        valid_minute = self.validate_dt_part(dt=dt, component='minute')
+
+        return valid_day and valid_month and valid_hour and valid_minute
                 
         
