@@ -159,7 +159,7 @@ def test_brute_next():
                                        hour=23, minute=59)
 
 
-def test_profile():
+def performance_test_profile():
     import cProfile, pstats
     parser = cronparse.CronParse()
     parser.set_cron(input_cron='1-59/59 14-23/23 29 2 *')
@@ -169,6 +169,15 @@ def test_profile():
             parser.brute_next(now=dt)
     
     cProfile.runctx("run_test(parser=parser, n=1000)", globals(), locals())
+
+
+def test_is_valid_time():
+    dt = datetime.datetime(year=2014, month=8, day=8, hour=8, minute=8)
+    parser = cronparse.CronParse()
+    parser.set_cron(input_cron='*/8 */4 8 8 *')
+    assert parser.is_valid_time(dt=dt)
+    dt = datetime.datetime(year=2014, month=8, day=8, hour=8, minute=9)
+    assert parser.is_valid_time(dt=dt) is False
 
 
 
