@@ -114,9 +114,23 @@ class CronParse(object):
         if self.cron_parts['dayofweek'] == '*':
             return True
         else:
-            weekday = int(self.cron_parts['dayofweek'])
-            if weekday == self.get_day_of_week(date=dt):
-                return True
+            current_day = self.get_day_of_week(date=dt)
+            for entry in self.cron_parts['dayofweek']:
+                if entry.isdigit() and\
+                   current_day == int(self.cron_parts['dayofweek']):
+                    return True
+                if '-' in entry:
+                    mini, maxi = entry.split('/')[0].split('-')
+                    if current_day < mini or current_day > maxi:
+                        continue
+                    if '/' in entry:
+                        return True
+                if '*' in entry:
+                    cycle_value = entry.split('/')[1]
+                    if not cycle_value.isdigit():
+                        raise ValueError('Invalid timevalue %s' % x)
+                    if current_day % int(cycle_value) == 0:
+                        return True    
             return False
 
     def validate_day(self, dt):
